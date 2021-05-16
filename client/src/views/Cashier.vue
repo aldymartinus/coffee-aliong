@@ -40,17 +40,17 @@
       </div>
       <div style="position:relative;" class="grand-total border">
         <span style="position:absolute; left:1rem; font-size:1rem; margin-top:0.2rem;  color:#888; font-family:Arial;">Total:</span>
-        <span style="margin-left: 2rem; font-weight:bold; font-family:monospace;">Rp{{total}}-,</span>
+        <span style="margin-left: 2rem; font-weight:bold; font-family:monospace;">{{new Intl.NumberFormat('id-ID',{style:"currency", currency:"IDR"}).format(total)}}-,</span>
       </div>
     </div>
     <div class="checkout-area">
       <div class="paid-nominal">
-        <input @keyup="countChange" v-model="paidNominal" placeholder="Nominal Pembayaran">
+        <input :disabled="total < 1 ? true : false" @keyup="countChange" v-model="paidNominal" placeholder="Nominal Pembayaran">
       </div>
       <div class="change-nominal border">
         <div style="position:relative; display:flex; flex-direction:row; justify-content:space-evenly;">
           <span style="font-size:1rem;  margin-top:1.3rem; color:#888; font-family:Arial; position:absolute; left:1rem;">Kembalian:</span>
-          <span style="margin-left: 2.5rem; font-weight:bold;">Rp{{change}}-,</span>
+          <span style="margin-left: 2.5rem; font-weight:bold;">{{change}}-,</span>
         </div>
       </div>
       <div class="submit-button">
@@ -73,12 +73,14 @@ export default {
       itemPrice: null,
       items: [],
       cart:[],
+      totalArr:[],
       searchItem:"",
       selected:{},
       change:0,
       paidNominal:null,
       total:0,
-      quantity:0
+      quantity:0,
+      isTotalEmpty:true
     };
   },  
   async mounted() {
@@ -89,11 +91,7 @@ export default {
   },
   methods:{
     countChange(){
-      if(this.paidNominal < this.total){
-        this.change=0;
-      }else{
-        this.change = this.paidNominal - this.total;
-      }
+      this.change = new Intl.NumberFormat('id-ID',{style:"currency", currency:"IDR"}).format(this.paidNominal-this.total);
     },
     cartItem(item){
         const cartObj = {};
@@ -102,6 +100,7 @@ export default {
         cartItems.itemName = item.itemName;
         cartItems.itemPrice = item.itemPrice;
         cartItems.quantity = this.quantity;
+
         if(this.cart.findIndex(x=> x.itemName === item.itemName) > -1){
         let index = this.cart.findIndex(x=> x.itemName === item.itemName);
         this.cart.splice(index,1);
@@ -116,16 +115,35 @@ export default {
             this.cart.splice(index,1);
           }
         });
+      
+        let totalObj = {};
+        let totalPrices = Object.create(totalObj);
+        totalPrices.itemName = item.itemName;
+        totalPrices.subTotal = item.itemPrice*this.quantity;
+        
+        if (this.totalArr.findIndex(x=> x.itemName === item.itemName) > -1) {
+          let index = this.totalArr.findIndex(x=> x.itemName === item.itemName);
+          this.totalArr.splice(index,1);
+          this.totalArr.push(totalPrices);
+        }else{
+          this.totalArr.push(totalPrices);
+        }
 
-        this.total= this.cart.forEach(element => {
-            
-        });
-
+        let subTotalArr = this.totalArr.map(item => item.subTotal);
+        this.total = this.sumSubtotal(subTotalArr);
+        this.countChange();
     },
     quantityHandler(e){
       this.quantity = e
-      },
     },
+    sumSubtotal(arr){
+      var total = 0;
+      for(var count = 0;count<arr.length;count++){
+      total = total + arr[count];
+    }
+      return total;
+    }
+  }
 };
 </script>
 
@@ -150,7 +168,6 @@ export default {
     ". item-area cart-area ."
     ". checkout-area checkout-area .";
 }
-
 .item-area {
   display: grid;
   grid-template-columns: 100%;
