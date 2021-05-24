@@ -4,7 +4,7 @@
 
     <router-link to="/">Kasir</router-link>
 
-    <router-link to="/laporan">Laporan</router-link>
+    <router-link to="/arsip">Arsip</router-link>
 </div>
 </template>
 

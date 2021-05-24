@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
+
 let cartSchema = new schema({
     date:{
-        type:Date,
-        default:Date.now,
+        type:String,
     },
-    item: [
+    time:{
+        type:String,
+    },
+    paid:{
+        type:String,
+    },
+    details: [
         {
             itemName:String,
             itemPrice:Number,

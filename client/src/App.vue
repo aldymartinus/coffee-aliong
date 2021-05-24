@@ -20,14 +20,12 @@ export default {
 <style scoped>
   .container{
     margin: 0 auto;
-    /* border: 1px black solid; */
     height: 94vh;
     width: 75vw;
     
   }
   main{
     margin: 0 auto;
-    /* border: 1px black solid; */
     height: 100%;
     width: 60vw;
   }

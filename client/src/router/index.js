@@ -16,11 +16,11 @@ const routes = [
     }
   },
   {
-    path: '/laporan',
-    name: 'Analytics',
+    path: '/arsip',
+    name: 'Archive',
     
     component: function () {
-      return import('../views/Analytics.vue')
+      return import('../views/Archive.vue')
     }
   }
 ]

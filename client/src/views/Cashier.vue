@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="submit-button">
-        <button>Bayar</button>
+        <button :disabled="(paidNominal >= total &&  paidNominal != null) ? false : true" @click="saveTransaction()">Bayar</button>
       </div>
     </div>
   </div>
@@ -91,6 +91,7 @@ export default {
   },
   methods:{
     countChange(){
+      this.total < 1 ? this.paidNominal = null : null;
       this.change = new Intl.NumberFormat('id-ID',{style:"currency", currency:"IDR"}).format(this.paidNominal-this.total);
     },
     cartItem(item){
@@ -142,6 +143,19 @@ export default {
       total = total + arr[count];
     }
       return total;
+    },
+     async saveTransaction(){
+       const date = new Date();
+        await axios
+        .post("http://localhost:3000/api/transactionDetails", {
+          date: `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`,
+          time: `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`,
+          details : this.cart,
+          paid: new Intl.NumberFormat('id-ID',{style:"currency", currency:"IDR"}).format(this.paidNominal),
+        }).then(()=>{
+          alert("Transaction Done!");
+            location.reload(true);
+        });
     }
   }
 };
@@ -230,7 +244,7 @@ export default {
   justify-content: center;
   padding-top:1.3rem ;
   font-size: 1.3rem;
-  color: #555;
+  color: #222;
 }
 
 .checkout-area {
@@ -254,7 +268,7 @@ export default {
   height: 89%;
   text-align: center;
   font-size: larger;
-  color:#544;
+  color:#222;
 }
 
 .change-nominal {
@@ -267,7 +281,7 @@ export default {
   justify-content: center;
   margin-top: 1.1rem;
   font-size: 1.3rem;
-  color: #555;
+  color: #222;
 }
 
 .submit-button {

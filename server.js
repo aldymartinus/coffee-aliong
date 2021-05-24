@@ -3,7 +3,8 @@ const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const bucketListItemRoutes = require('./routes/api/menuDetailsItem')
+const menuDetailsItemRoutes = require('./routes/api/menuDetailsItem')
+const transactionDetailsRoutes = require('./routes/api/transactionDetails')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -18,7 +19,8 @@ mongoose
     .then(() => console.log('MongoDB database Connected...'))
     .catch((err) => console.log(err))
 
-app.use('/api/menuDetailsItem', bucketListItemRoutes)
+app.use('/api/menuDetailsItem', menuDetailsItemRoutes)
+app.use('/api/transactionDetails', transactionDetailsRoutes)
 
 app.listen(3000,()=>{
     console.log('Server started on port 3000.');
