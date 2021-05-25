@@ -148,7 +148,7 @@ export default {
        const date = new Date();
         await axios
         .post("http://localhost:3000/api/transactionDetails", {
-          date: `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`,
+          date: `${date.getFullYear()}-0${date.getMonth()+1}-${date.getDate()}`,
           time: `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`,
           details : this.cart,
           paid: new Intl.NumberFormat('id-ID',{style:"currency", currency:"IDR"}).format(this.paidNominal),
