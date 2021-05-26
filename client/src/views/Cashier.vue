@@ -149,9 +149,9 @@ export default {
         await axios
         .post("http://localhost:3000/api/transactionDetails", {
           date: `${date.getFullYear()}-0${date.getMonth()+1}-${date.getDate()}`,
-          time: `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`,
+          time: `${date.getHours()}:${date.getMinutes() < 10 ? 0 : ""}${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`,
           details : this.cart,
-          paid: new Intl.NumberFormat('id-ID',{style:"currency", currency:"IDR"}).format(this.paidNominal),
+          paid: this.paidNominal,
         }).then(()=>{
           alert("Transaction Done!");
             location.reload(true);
